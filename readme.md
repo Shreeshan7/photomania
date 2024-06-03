@@ -45,10 +45,12 @@ This app allows users to discover, collect, and share images and links to variou
     ```bash
     npm install
     cd client
-    npm install
-    cd ..
     ```
-3. **Environment Variables**:
+3. **Start server**:
+    ```bash
+    npm start
+    ```
+4. **Environment Variables**:
 
            
 | Env Name     |       Value       |                            Description |

@@ -12,7 +12,7 @@ export const authenticateToken = (req: Request, res: Response, next: NextFunctio
     return res.sendStatus(401);
   }
   
-  jwt.verify(token, "secretKey", (err, user) => {
+  jwt.verify(token, process.env.JWT_TOKEN!, (err, user) => {
 
     if (err) {
       return res.sendStatus(403); 

@@ -41,7 +41,6 @@ export const deletePost = async (postId: number, userId: number) => {
 
   await postRepository.remove(post);
 
-  // Delete the image file
   if (imagePath) {
     const fullPath = path.resolve(imagePath);
     fs.unlink(fullPath, (err) => {
