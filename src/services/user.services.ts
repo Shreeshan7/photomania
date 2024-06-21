@@ -20,6 +20,11 @@ export const addUser = async (
   email: string,
   password: string
 ) => {
+  const existingUser = await userRepository.findOne({ where: { email } });
+  if (existingUser) {
+    throw new Error("Email already exists");
+  }
+
   const encryptPass = await bcrypt.hash(password, 10);
   const result = userRepository.create({
     username,
@@ -39,5 +44,15 @@ export const loginUser = async (email: string, password: string) => {
   if (!passCheck) {
     throw new Error("Incorrect Password");
   }
+  return user;
+};
+
+export const getImage = async (userId: number, imageUrl: string) => {
+  const user = await userRepository.findOneBy({ id: userId });
+  if (!user) {
+    throw new Error("User Not found");
+  }
+  user.imageUrl = imageUrl;
+  await userRepository.save(user);
   return user;
 };

@@ -1,5 +1,6 @@
-import { Request } from "express";
-
 export type CustomUser = {
   id: number;
-}
+  username: string;
+  email: string;
+  imageUrl: string;
+};

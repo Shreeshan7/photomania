@@ -5,9 +5,26 @@ import fs from "fs";
 
 const postRepository = AppDataSource.getRepository(Post);
 
-export const getAllPost = async () => {
-  const allPost = await postRepository.find();
-  return allPost;
+export const getAllPost = async (page: number, limit: number) => {
+  const offset = (page - 1) * limit;
+  const [result, total] = await postRepository.findAndCount({
+    skip: offset,
+    take: limit,
+    relations: ["user"],
+  });
+
+  return {
+    posts: result,
+    total,
+    page,
+    lastPage: Math.ceil(total / limit),
+  };
+};
+export const getPostByID = async (postId: number) => {
+  return await postRepository.findOne({
+    where: { id: postId },
+    relations: ["user"],
+  });
 };
 
 export const createPost = async (
@@ -65,6 +82,7 @@ export const updatePost = async (
   if (!post) {
     throw new Error("Post not found or not authorized");
   }
+
   const oldImagePath = post.imageUrl;
   post.caption = caption;
   post.imageUrl = imageUrl;
@@ -79,5 +97,21 @@ export const updatePost = async (
       }
     });
   }
-  return updatePost;
+
+  return post;
+};
+
+export const getPostsByUserId = async (userId: number) => {
+  return await postRepository.find({
+    where: { user: { id: userId } },
+    relations: ["user"],
+  });
+};
+
+export const getImage = async (userId: number, imageUrl: string) => {
+  const user = await postRepository.findOne({ where: { id: userId } });
+  if (!user) {
+    throw new Error("User Not found");
+  }
+  user.imageUrl = imageUrl;
 };

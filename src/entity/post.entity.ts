@@ -1,5 +1,11 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
-import { User } from './user.entity';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  CreateDateColumn,
+} from "typeorm";
+import { User } from "./user.entity";
 
 @Entity()
 export class Post {
@@ -12,6 +18,9 @@ export class Post {
   @Column()
   imageUrl!: string;
 
-  @ManyToOne(() => User, user => user.posts)
+  @CreateDateColumn({ type: "timestamp" })
+  createdAt!: Date;
+
+  @ManyToOne(() => User, (user) => user.posts)
   user!: User;
 }
