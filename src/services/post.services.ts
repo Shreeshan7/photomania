@@ -72,7 +72,7 @@ export const deletePost = async (postId: number, userId: number) => {
 export const updatePost = async (
   postId: number,
   caption: string,
-  imageUrl: string,
+  imageUrl: string | undefined,
   userId: number
 ) => {
   const post = await postRepository.findOne({
@@ -83,9 +83,13 @@ export const updatePost = async (
     throw new Error("Post not found or not authorized");
   }
 
-  const oldImagePath = post.imageUrl;
   post.caption = caption;
-  post.imageUrl = imageUrl;
+
+  let oldImagePath: string | undefined;
+  if (imageUrl) {
+    oldImagePath = post.imageUrl;
+    post.imageUrl = imageUrl;
+  }
 
   await postRepository.save(post);
 
@@ -106,12 +110,4 @@ export const getPostsByUserId = async (userId: number) => {
     where: { user: { id: userId } },
     relations: ["user"],
   });
-};
-
-export const getImage = async (userId: number, imageUrl: string) => {
-  const user = await postRepository.findOne({ where: { id: userId } });
-  if (!user) {
-    throw new Error("User Not found");
-  }
-  user.imageUrl = imageUrl;
 };

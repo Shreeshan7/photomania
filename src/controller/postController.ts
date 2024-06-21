@@ -105,11 +105,9 @@ export const updatePostController = async (req: Request, res: Response) => {
     const { caption } = req.body;
     const image = req.file;
 
-    if (!image) {
-      return res.status(400).json({ error: "Image file is required" });
-    }
+    const imageUrl = image ? image.path : undefined;
 
-    await postServices.updatePost(postId, caption, image.path, req.user.id);
+    await postServices.updatePost(postId, caption, imageUrl, req.user.id);
 
     res.status(200).json({ message: "Post updated successfully" });
   } catch (error: any) {
